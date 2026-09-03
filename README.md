@@ -71,17 +71,47 @@ npm run start
 
 ## Hospedagem
 
-Este projeto grava dados em um arquivo SQLite (`dev.db`) e as fotos enviadas
-pelos clientes em `public/uploads/`. Isso funciona muito bem em um servidor
-tradicional (VPS, Docker, Railway, Render etc.) rodando `npm run start`, mas
-**não é compatível com deploys serverless "read-only"** (como a Vercel no
-plano padrão), pois o sistema de arquivos não é persistente nesses ambientes.
+Este projeto grava dados em um arquivo SQLite e as fotos enviadas pelos
+clientes em disco (pasta controlada pela variável `UPLOADS_DIR`). Isso
+funciona muito bem em um servidor tradicional com disco persistente (VPS,
+Docker, Railway, Render etc.) rodando `npm run start`, mas **não é
+compatível com deploys serverless "read-only"** (como a Vercel no plano
+padrão), pois o sistema de arquivos não é persistente nesses ambientes.
+
+### Deploy no Render (recomendado, já configurado)
+
+O repositório já inclui um `render.yaml` pronto:
+
+1. Crie uma conta em [render.com](https://render.com) e conecte sua conta do
+   GitHub.
+2. No painel do Render, clique em **New → Blueprint** e selecione este
+   repositório. O Render vai detectar o `render.yaml` automaticamente
+   (branch `claude/saas-orcamento-funilaria-3zfdhj`).
+3. Quando pedir, preencha as variáveis de ambiente:
+   - `ADMIN_PASSWORD` — senha do painel `/admin`.
+   - `NEXT_PUBLIC_WHATSAPP_NUMBER` — número de WhatsApp da oficina (só
+     números, com DDI+DDD, ex: `5511999999999`).
+4. Clique em **Apply**. O Render cria o serviço web com um disco persistente
+   de 1GB montado em `/data` (onde ficam o banco SQLite e as fotos), roda
+   `npx prisma migrate deploy` automaticamente antes de iniciar, e publica
+   uma URL pública (`https://<nome-do-serviço>.onrender.com`).
+5. Todo novo `git push` nessa branch dispara um novo deploy automaticamente.
+
+### Outras plataformas com disco persistente (Railway, VPS, Docker)
+
+Mesma lógica do Render: defina `DATABASE_URL` apontando para um arquivo no
+disco persistente (ex: `file:/data/app.db`) e `UPLOADS_DIR` para uma pasta
+nesse mesmo disco (ex: `/data/uploads`), rode `npx prisma migrate deploy` no
+início do deploy e depois `npm run start`.
+
+### Deploy serverless (Vercel e similares)
 
 Para hospedar em plataformas serverless, será necessário trocar:
 - O SQLite por um banco gerenciado (Postgres, MySQL etc.) — basta trocar o
   `provider` em `prisma/schema.prisma` e o adapter em `lib/prisma.ts`.
 - O upload de fotos em disco por um serviço de armazenamento de objetos
-  (S3, Cloudflare R2, Vercel Blob etc.) em `app/api/upload/route.ts`.
+  (S3, Cloudflare R2, Vercel Blob etc.) em `app/api/upload/route.ts` e
+  `app/api/files/[filename]/route.ts`.
 
 ## Estrutura principal
 

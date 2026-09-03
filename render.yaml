@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: lindomar-funilaria-pintura
+    runtime: node
+    plan: free
+    branch: claude/saas-orcamento-funilaria-3zfdhj
+    buildCommand: npm install && npm run build
+    startCommand: npx prisma migrate deploy && npx next start -H 0.0.0.0 -p $PORT
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:/data/app.db
+      - key: UPLOADS_DIR
+        value: /data/uploads
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        sync: false
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1

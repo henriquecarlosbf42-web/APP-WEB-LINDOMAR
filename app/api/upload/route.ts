@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
+import { UPLOADS_DIR } from "@/lib/uploads";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"];
 const MAX_SIZE_BYTES = 8 * 1024 * 1024; // 8MB
@@ -26,8 +27,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  await mkdir(uploadsDir, { recursive: true });
+  await mkdir(UPLOADS_DIR, { recursive: true });
 
   const urls: string[] = [];
 
@@ -49,8 +49,8 @@ export async function POST(request: NextRequest) {
     const safeExt = /^\.[a-z0-9]+$/.test(ext) ? ext : ".jpg";
     const filename = `${crypto.randomUUID()}${safeExt}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(path.join(uploadsDir, filename), buffer);
-    urls.push(`/uploads/${filename}`);
+    await writeFile(path.join(UPLOADS_DIR, filename), buffer);
+    urls.push(`/api/files/${filename}`);
   }
 
   return NextResponse.json({ urls });
