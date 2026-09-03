@@ -1,7 +1,9 @@
 import { QuoteInput } from "@/lib/quote";
-import { CAR_BRAND_NAMES, CAR_COLORS, CAR_YEARS, modelsForBrand } from "@/lib/vehicles";
+import { CAR_BRAND_NAMES, CAR_YEARS, PAINT_FINISHES, modelsForBrand } from "@/lib/vehicles";
 import { TextField, SelectField } from "./FormField";
 import SelectOrOther from "./SelectOrOther";
+import ColorSwatchPicker from "./ColorSwatchPicker";
+import OptionCard from "./OptionCard";
 import WizardNav from "./WizardNav";
 
 type Errors = Partial<Record<keyof QuoteInput, string>>;
@@ -28,9 +30,9 @@ export default function StepVehicle({
 
   return (
     <div>
-      <h2 className="text-xl font-bold">Dados do veículo</h2>
+      <h2 className="text-xl font-bold">Qual é o carro?</h2>
       <p className="mt-1 text-sm text-muted">
-        Conte pra gente sobre o carro que vai passar pelo serviço.
+        Marca, modelo e cor definem o preço da tinta e o tempo de serviço.
       </p>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
@@ -71,16 +73,6 @@ export default function StepVehicle({
             </option>
           ))}
         </SelectField>
-        <SelectOrOther
-          id="vehicleColor"
-          label="Cor"
-          placeholder="Selecione a cor"
-          otherLabel="Outra cor"
-          options={CAR_COLORS}
-          value={data.vehicleColor}
-          error={errors.vehicleColor}
-          onChange={(vehicleColor) => onChange({ vehicleColor })}
-        />
         <TextField
           id="vehiclePlate"
           label="Placa"
@@ -92,6 +84,44 @@ export default function StepVehicle({
             onChange({ vehiclePlate: e.target.value.toUpperCase() })
           }
         />
+      </div>
+
+      <div className="mt-5">
+        <ColorSwatchPicker
+          value={data.vehicleColor}
+          error={errors.vehicleColor}
+          onChange={(vehicleColor) => onChange({ vehicleColor })}
+        />
+      </div>
+
+      <fieldset className="mt-6">
+        <span className="input-label">Tipo de pintura</span>
+        <div className="flex flex-col gap-2">
+          {PAINT_FINISHES.map((f) => (
+            <OptionCard
+              key={f.value}
+              label={f.value}
+              description={f.description}
+              shape="round"
+              active={data.vehicleFinish === f.value}
+              onClick={() => onChange({ vehicleFinish: f.value })}
+            />
+          ))}
+        </div>
+      </fieldset>
+
+      <div className="mt-5">
+        <TextField
+          id="paintCode"
+          label="Código da tinta"
+          optional
+          placeholder="Ex: GAZ, 1G3, NH-731P"
+          value={data.paintCode}
+          onChange={(e) => onChange({ paintCode: e.target.value })}
+        />
+        <p className="mt-1.5 text-xs text-muted">
+          Fica numa etiqueta na coluna da porta do motorista ou no cofre do motor.
+        </p>
       </div>
 
       <WizardNav onNext={onNext} />

@@ -107,20 +107,34 @@ export function modelsForBrand(brand: string): string[] {
   return CAR_BRANDS.find((b) => b.brand === brand)?.models ?? [];
 }
 
-export const CAR_COLORS = [
-  "Branco",
-  "Prata",
-  "Cinza",
-  "Preto",
-  "Vermelho",
-  "Azul",
-  "Verde",
-  "Amarelo",
-  "Marrom",
-  "Bege",
-  "Dourado",
-  "Vinho",
-  "Laranja",
+export const CAR_COLORS: { name: string; hex: string }[] = [
+  { name: "Branco", hex: "#F2F2EF" },
+  { name: "Prata", hex: "#B7BCC0" },
+  { name: "Cinza", hex: "#6E747A" },
+  { name: "Preto", hex: "#191B1E" },
+  { name: "Vermelho", hex: "#B4231E" },
+  { name: "Vinho", hex: "#6C1F28" },
+  { name: "Azul", hex: "#1F4C8C" },
+  { name: "Azul claro", hex: "#7FA3C4" },
+  { name: "Verde", hex: "#2C5B43" },
+  { name: "Bege", hex: "#C9B79A" },
+  { name: "Marrom", hex: "#5A4232" },
+  { name: "Amarelo", hex: "#D9A81C" },
+  { name: "Dourado", hex: "#B8963E" },
+  { name: "Laranja", hex: "#C96218" },
+];
+
+export const CAR_COLOR_NAMES = CAR_COLORS.map((c) => c.name);
+
+export function hexForColorName(name: string): string | null {
+  return CAR_COLORS.find((c) => c.name === name)?.hex ?? null;
+}
+
+export const PAINT_FINISHES: { value: string; description: string }[] = [
+  { value: "Sólida", description: "Cor lisa, sem brilho metálico." },
+  { value: "Metálica", description: "Tem partículas que brilham no sol." },
+  { value: "Perolizada", description: "Muda de tom conforme o ângulo." },
+  { value: "Não sei", description: "A oficina identifica na hora." },
 ];
 
 const CURRENT_YEAR = new Date().getFullYear();
