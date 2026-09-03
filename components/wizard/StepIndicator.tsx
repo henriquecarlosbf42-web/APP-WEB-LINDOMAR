@@ -1,4 +1,4 @@
-const LABELS = ["Veículo", "Serviço", "Fotos", "Contato", "Revisão"];
+const LABELS = ["Veículo", "Serviço", "Contato", "Revisão"];
 
 export default function StepIndicator({ current }: { current: number }) {
   return (

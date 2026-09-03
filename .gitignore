@@ -41,14 +41,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-/app/generated/prisma
-
-# banco de dados local (SQLite)
-/dev.db
-/dev.db-journal
-/prisma/*.db
-/prisma/*.db-journal
-
-# fotos enviadas pelos clientes (uso local)
-/public/uploads/*
-!/public/uploads/.gitkeep

@@ -5,7 +5,6 @@ import { QuoteInput, emptyQuoteInput, quoteSchema } from "@/lib/quote";
 import StepIndicator from "./StepIndicator";
 import StepVehicle from "./StepVehicle";
 import StepService from "./StepService";
-import StepPhotos from "./StepPhotos";
 import StepContact from "./StepContact";
 import StepReview from "./StepReview";
 import StepSuccess from "./StepSuccess";
@@ -15,17 +14,16 @@ type Errors = Partial<Record<keyof QuoteInput, string>>;
 const STEP_FIELDS: Record<number, (keyof QuoteInput)[]> = {
   1: ["vehicleBrand", "vehicleModel", "vehicleYear", "vehicleColor", "vehiclePlate"],
   2: ["services", "description"],
-  3: ["photos"],
-  4: ["customerName", "customerPhone", "customerEmail", "customerCity"],
+  3: ["customerName", "customerPhone", "customerEmail", "customerCity"],
 };
+
+const LAST_STEP = 4;
 
 export default function QuoteWizard() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<QuoteInput>(emptyQuoteInput);
   const [errors, setErrors] = useState<Errors>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [sent, setSent] = useState(false);
 
   function updateData(patch: Partial<QuoteInput>) {
     setData((prev) => ({ ...prev, ...patch }));
@@ -52,7 +50,7 @@ export default function QuoteWizard() {
 
   function goNext() {
     if (validateStep(step)) {
-      setStep((s) => Math.min(s + 1, 5));
+      setStep((s) => Math.min(s + 1, LAST_STEP));
     }
   }
 
@@ -60,50 +58,21 @@ export default function QuoteWizard() {
     setStep((s) => Math.max(s - 1, 1));
   }
 
-  async function handleSubmit() {
-    const result = quoteSchema.safeParse(data);
-    if (!result.success) {
-      const allErrors: Errors = {};
-      let firstInvalidStep = 5;
-      for (const issue of result.error.issues) {
-        const field = issue.path[0] as keyof QuoteInput;
-        allErrors[field] = issue.message;
-        for (const [stepNumber, fields] of Object.entries(STEP_FIELDS)) {
-          if (fields.includes(field)) {
-            firstInvalidStep = Math.min(firstInvalidStep, Number(stepNumber));
-          }
-        }
-      }
-      setErrors(allErrors);
-      setStep(firstInvalidStep);
-      return;
-    }
-
-    setSubmitting(true);
-    setSubmitError(null);
-    try {
-      const res = await fetch("/api/orcamentos", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const json = await res.json().catch(() => null);
-        setSubmitError(json?.error ?? "Não foi possível enviar seu orçamento. Tente novamente.");
-        return;
-      }
-      setSubmitted(true);
-    } catch {
-      setSubmitError("Não foi possível enviar seu orçamento. Verifique sua conexão e tente novamente.");
-    } finally {
-      setSubmitting(false);
-    }
+  function handleSent() {
+    setSent(true);
   }
 
-  if (submitted) {
+  function handleRestart() {
+    setData(emptyQuoteInput);
+    setErrors({});
+    setSent(false);
+    setStep(1);
+  }
+
+  if (sent) {
     return (
       <div className="mx-auto max-w-lg rounded-2xl border border-[var(--border-color)] bg-[var(--surface)] p-6 sm:p-8">
-        <StepSuccess data={data} />
+        <StepSuccess data={data} onRestart={handleRestart} />
       </div>
     );
   }
@@ -120,20 +89,10 @@ export default function QuoteWizard() {
           <StepService data={data} errors={errors} onChange={updateData} onNext={goNext} onBack={goBack} />
         )}
         {step === 3 && (
-          <StepPhotos data={data} onChange={updateData} onNext={goNext} onBack={goBack} />
-        )}
-        {step === 4 && (
           <StepContact data={data} errors={errors} onChange={updateData} onNext={goNext} onBack={goBack} />
         )}
-        {step === 5 && (
-          <StepReview
-            data={data}
-            onBack={goBack}
-            onEdit={setStep}
-            onSubmit={handleSubmit}
-            loading={submitting}
-            submitError={submitError}
-          />
+        {step === 4 && (
+          <StepReview data={data} onBack={goBack} onEdit={setStep} onSent={handleSent} />
         )}
       </div>
     </div>

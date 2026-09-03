@@ -1,5 +1,5 @@
-import { QuoteInput, serviceLabels } from "@/lib/quote";
-import WizardNav from "./WizardNav";
+import { QuoteInput, buildMailtoUrl, buildWhatsAppUrl, serviceLabels } from "@/lib/quote";
+import { CONTACT_EMAIL, WHATSAPP_NUMBER } from "@/lib/contact";
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
@@ -14,22 +14,21 @@ export default function StepReview({
   data,
   onBack,
   onEdit,
-  onSubmit,
-  loading,
-  submitError,
+  onSent,
 }: {
   data: QuoteInput;
   onBack: () => void;
   onEdit: (step: number) => void;
-  onSubmit: () => void;
-  loading: boolean;
-  submitError: string | null;
+  onSent: () => void;
 }) {
+  const whatsappUrl = buildWhatsAppUrl(data, WHATSAPP_NUMBER);
+  const mailtoUrl = buildMailtoUrl(data, CONTACT_EMAIL);
+
   return (
     <div>
       <h2 className="text-xl font-bold">Revise seu pedido</h2>
       <p className="mt-1 text-sm text-muted">
-        Confira as informações antes de enviar.
+        Confira as informações e escolha como enviar.
       </p>
 
       <div className="mt-6 rounded-xl border border-[var(--border-color)] p-4">
@@ -61,27 +60,10 @@ export default function StepReview({
         </div>
       </div>
 
-      {data.photos.length > 0 && (
-        <div className="mt-4 rounded-xl border border-[var(--border-color)] p-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold">Fotos</h3>
-            <button type="button" onClick={() => onEdit(3)} className="text-xs font-semibold text-brand">
-              Editar
-            </button>
-          </div>
-          <div className="mt-3 grid grid-cols-4 gap-2 sm:grid-cols-6">
-            {data.photos.map((url) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={url} src={url} alt="Foto do veículo" className="aspect-square rounded-lg object-cover" />
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className="mt-4 rounded-xl border border-[var(--border-color)] p-4">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">Contato</h3>
-          <button type="button" onClick={() => onEdit(4)} className="text-xs font-semibold text-brand">
+          <button type="button" onClick={() => onEdit(3)} className="text-xs font-semibold text-brand">
             Editar
           </button>
         </div>
@@ -93,14 +75,39 @@ export default function StepReview({
         </div>
       </div>
 
-      {submitError && <p className="field-error mt-4">{submitError}</p>}
+      <p className="mt-5 text-xs text-muted">
+        Tem fotos do veículo? Pode anexar direto na conversa depois de enviar
+        pelo WhatsApp — isso ajuda muito no orçamento.
+      </p>
 
-      <WizardNav
-        onBack={onBack}
-        onNext={onSubmit}
-        nextLabel="Enviar orçamento"
-        loading={loading}
-      />
+      <div className="mt-4 flex flex-col gap-3">
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onSent}
+          className="w-full rounded-lg bg-[#25D366] px-6 py-3 text-center text-sm font-semibold text-white transition hover:opacity-90"
+        >
+          Enviar pelo WhatsApp
+        </a>
+        <a
+          href={mailtoUrl}
+          onClick={onSent}
+          className="w-full rounded-lg border border-[var(--border-color)] px-6 py-3 text-center text-sm font-semibold transition hover:bg-[var(--background)]"
+        >
+          Enviar por e-mail
+        </a>
+      </div>
+
+      <div className="mt-6">
+        <button
+          type="button"
+          onClick={onBack}
+          className="rounded-lg border border-[var(--border-color)] px-5 py-2.5 text-sm font-semibold transition hover:bg-[var(--background)]"
+        >
+          Voltar
+        </button>
+      </div>
     </div>
   );
 }
