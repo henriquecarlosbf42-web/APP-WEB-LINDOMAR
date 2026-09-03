@@ -50,11 +50,13 @@ Para ativar (uma vez só):
 1. No repositório do GitHub, vá em **Settings → Pages** e em "Build and
    deployment" escolha **Source: GitHub Actions**.
 2. Ainda em Settings, vá em **Secrets and variables → Actions → Variables**
-   e crie duas "Repository variables":
+   e crie estas "Repository variables":
    - `NEXT_PUBLIC_WHATSAPP_NUMBER` — WhatsApp da oficina, só números, com
      DDI+DDD (ex: `5511999999999`).
    - `NEXT_PUBLIC_CONTACT_EMAIL` — e-mail da oficina (ex:
      `contato@suaoficina.com.br`).
+   - `NEXT_PUBLIC_YOUTUBE_URL` — link do canal do YouTube.
+   - `NEXT_PUBLIC_INSTAGRAM_URL` — link do perfil do Instagram.
 3. Dê um `git push` nessa branch (ou rode o workflow manualmente em
    **Actions → Deploy para o GitHub Pages → Run workflow**).
 4. Em alguns minutos o site fica no ar em
@@ -85,7 +87,8 @@ components/
   wizard/                   etapas do formulário multi-etapas
 lib/
   quote.ts                  schema de validação (zod) e montagem da mensagem
-  contact.ts                WhatsApp/e-mail da oficina (via env vars)
+  contact.ts                WhatsApp/e-mail/redes sociais da oficina (via env vars)
+  vehicles.ts                marcas, modelos, anos e cores dos veículos
 .github/workflows/
   deploy-pages.yml           build + deploy automático no GitHub Pages
 ```

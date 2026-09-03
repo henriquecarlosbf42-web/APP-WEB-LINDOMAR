@@ -1,5 +1,7 @@
 import { QuoteInput } from "@/lib/quote";
-import { TextField } from "./FormField";
+import { CAR_BRAND_NAMES, CAR_COLORS, CAR_YEARS, modelsForBrand } from "@/lib/vehicles";
+import { TextField, SelectField } from "./FormField";
+import SelectOrOther from "./SelectOrOther";
 import WizardNav from "./WizardNav";
 
 type Errors = Partial<Record<keyof QuoteInput, string>>;
@@ -15,6 +17,15 @@ export default function StepVehicle({
   onChange: (patch: Partial<QuoteInput>) => void;
   onNext: () => void;
 }) {
+  const modelOptions = modelsForBrand(data.vehicleBrand);
+
+  function handleBrandChange(brand: string) {
+    onChange({
+      vehicleBrand: brand,
+      vehicleModel: modelsForBrand(brand).includes(data.vehicleModel) ? data.vehicleModel : "",
+    });
+  }
+
   return (
     <div>
       <h2 className="text-xl font-bold">Dados do veículo</h2>
@@ -23,41 +34,52 @@ export default function StepVehicle({
       </p>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2">
-        <TextField
+        <SelectOrOther
           id="vehicleBrand"
           label="Marca"
-          placeholder="Ex: Volkswagen"
+          placeholder="Selecione a marca"
+          otherLabel="Outra marca"
+          options={CAR_BRAND_NAMES}
           value={data.vehicleBrand}
           error={errors.vehicleBrand}
-          onChange={(e) => onChange({ vehicleBrand: e.target.value })}
+          onChange={handleBrandChange}
         />
-        <TextField
+        <SelectOrOther
+          key={data.vehicleBrand}
           id="vehicleModel"
           label="Modelo"
-          placeholder="Ex: Gol"
+          placeholder="Selecione o modelo"
+          otherLabel="Outro modelo"
+          options={modelOptions}
           value={data.vehicleModel}
           error={errors.vehicleModel}
-          onChange={(e) => onChange({ vehicleModel: e.target.value })}
+          onChange={(vehicleModel) => onChange({ vehicleModel })}
         />
-        <TextField
+        <SelectField
           id="vehicleYear"
           label="Ano"
-          placeholder="Ex: 2018"
-          inputMode="numeric"
-          maxLength={4}
           value={data.vehicleYear}
           error={errors.vehicleYear}
-          onChange={(e) =>
-            onChange({ vehicleYear: e.target.value.replace(/\D/g, "") })
-          }
-        />
-        <TextField
+          onChange={(e) => onChange({ vehicleYear: e.target.value })}
+        >
+          <option value="" disabled>
+            Selecione o ano
+          </option>
+          {CAR_YEARS.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </SelectField>
+        <SelectOrOther
           id="vehicleColor"
           label="Cor"
-          placeholder="Ex: Prata"
+          placeholder="Selecione a cor"
+          otherLabel="Outra cor"
+          options={CAR_COLORS}
           value={data.vehicleColor}
           error={errors.vehicleColor}
-          onChange={(e) => onChange({ vehicleColor: e.target.value })}
+          onChange={(vehicleColor) => onChange({ vehicleColor })}
         />
         <TextField
           id="vehiclePlate"

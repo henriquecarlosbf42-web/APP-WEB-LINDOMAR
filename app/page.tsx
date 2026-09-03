@@ -22,13 +22,19 @@ const STEPS = [
     text: "Escolha o que precisa: funilaria, pintura, polimento e mais.",
   },
   {
-    title: "Fotos (opcional)",
-    text: "Envie fotos do problema para um orçamento mais preciso.",
-  },
-  {
     title: "Seus dados",
     text: "Nome e WhatsApp para te enviarmos a resposta.",
   },
+  {
+    title: "Revisão e envio",
+    text: "Confira tudo e envie direto pelo WhatsApp ou e-mail.",
+  },
+];
+
+const TRUST_POINTS = [
+  "+10 anos de experiência em funilaria e pintura",
+  "Orçamento rápido, sem compromisso",
+  "Atendimento direto pelo WhatsApp",
 ];
 
 export default function Home() {
@@ -38,10 +44,13 @@ export default function Home() {
       <main className="flex-1">
         <section className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
           <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-wide text-brand">
-              Orçamento rápido e sem compromisso
-            </p>
-            <h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/10 px-4 py-1.5 text-sm font-semibold text-brand">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor" aria-hidden="true">
+                <path d="M12 1.5 15 8l7 1-5.2 4.9L18 21l-6-3.4L6 21l1.2-7.1L2 9l7-1Z" />
+              </svg>
+              +10 anos de mercado
+            </div>
+            <h1 className="mt-4 text-4xl font-extrabold tracking-tight sm:text-5xl">
               Seu carro novo de novo. Peça o orçamento em minutos.
             </h1>
             <p className="mt-5 text-lg text-muted">
@@ -66,14 +75,29 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="servicos" className="border-t border-[var(--border-color)] bg-[var(--surface)]">
+        <section className="border-y border-[var(--border-color)] bg-[var(--surface)]">
+          <div className="mx-auto max-w-5xl px-5 py-6">
+            <ul className="flex flex-col gap-3 text-sm font-medium sm:flex-row sm:flex-wrap sm:justify-between">
+              {TRUST_POINTS.map((point) => (
+                <li key={point} className="flex items-center gap-2">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-brand" fill="currentColor" aria-hidden="true">
+                    <path d="M9.5 17.2 4.8 12.5l1.4-1.4 3.3 3.3 8.3-8.3 1.4 1.4Z" />
+                  </svg>
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section id="servicos" className="border-b border-[var(--border-color)]">
           <div className="mx-auto max-w-5xl px-5 py-16">
             <h2 className="text-2xl font-bold">Nossos serviços</h2>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {SERVICE_OPTIONS.filter((s) => s.id !== "outro").map((s) => (
                 <div
                   key={s.id}
-                  className="rounded-xl border border-[var(--border-color)] bg-[var(--background)] p-5"
+                  className="rounded-xl border border-[var(--border-color)] bg-[var(--surface)] p-5"
                 >
                   <h3 className="font-semibold">{s.label}</h3>
                   <p className="mt-2 text-sm text-muted">

@@ -36,6 +36,8 @@ jobs:
           NEXT_BASE_PATH: /${{ github.event.repository.name }}
           NEXT_PUBLIC_WHATSAPP_NUMBER: ${{ vars.NEXT_PUBLIC_WHATSAPP_NUMBER }}
           NEXT_PUBLIC_CONTACT_EMAIL: ${{ vars.NEXT_PUBLIC_CONTACT_EMAIL }}
+          NEXT_PUBLIC_YOUTUBE_URL: ${{ vars.NEXT_PUBLIC_YOUTUBE_URL }}
+          NEXT_PUBLIC_INSTAGRAM_URL: ${{ vars.NEXT_PUBLIC_INSTAGRAM_URL }}
         run: npm run build
 
       - name: Configurar GitHub Pages

@@ -6,3 +6,9 @@ export const WHATSAPP_NUMBER =
 
 export const CONTACT_EMAIL =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contato@lindomarfunilariaepintura.com.br";
+
+export const YOUTUBE_URL =
+  process.env.NEXT_PUBLIC_YOUTUBE_URL || "https://www.youtube.com/@lindomarfunilariaepintura";
+
+export const INSTAGRAM_URL =
+  process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/lindomarfunilariaepintura";
