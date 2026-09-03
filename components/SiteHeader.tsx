@@ -1,17 +1,19 @@
 import Link from "next/link";
-import { INSTAGRAM_URL, YOUTUBE_URL } from "@/lib/contact";
+import { BUSINESS_NAME, INSTAGRAM_URL, YOUTUBE_URL } from "@/lib/contact";
 import { InstagramIcon, YouTubeIcon } from "./SocialIcons";
 
 export default function SiteHeader() {
+  const [firstWord, ...rest] = BUSINESS_NAME.split(" ");
+
   return (
     <header className="border-b border-[var(--border-color)] bg-[var(--surface)]">
       <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4">
         <Link href="/" className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand text-brand-foreground font-bold">
-            L
+            {firstWord.charAt(0)}
           </span>
           <span className="text-lg font-bold tracking-tight">
-            Lindomar <span className="text-brand">Funilaria & Pintura</span>
+            {firstWord} <span className="text-brand">{rest.join(" ")}</span>
           </span>
         </Link>
 

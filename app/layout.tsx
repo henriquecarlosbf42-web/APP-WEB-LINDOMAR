@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { BUSINESS_NAME } from "@/lib/contact";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Lindomar Funilaria & Pintura | Orçamento Online",
+  title: `${BUSINESS_NAME} | Orçamento Online`,
   description:
     "Solicite seu orçamento de funilaria, pintura, polimento e pintura de rodas em poucos passos, direto do seu celular.",
 };

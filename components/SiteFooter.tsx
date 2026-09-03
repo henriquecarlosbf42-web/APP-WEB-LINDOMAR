@@ -1,4 +1,4 @@
-import { INSTAGRAM_URL, YOUTUBE_URL } from "@/lib/contact";
+import { BUSINESS_NAME, INSTAGRAM_URL, YOUTUBE_URL } from "@/lib/contact";
 import { InstagramIcon, YouTubeIcon } from "./SocialIcons";
 
 export default function SiteFooter() {
@@ -8,7 +8,7 @@ export default function SiteFooter() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="font-semibold text-[var(--foreground)]">
-              Lindomar Funilaria & Pintura
+              {BUSINESS_NAME}
             </p>
             <p className="mt-1">
               Funilaria • Pintura • Polimento • Pintura de Rodas
@@ -39,7 +39,7 @@ export default function SiteFooter() {
           </div>
         </div>
         <p className="mt-6">
-          &copy; {new Date().getFullYear()} Lindomar Funilaria & Pintura.
+          &copy; {new Date().getFullYear()} {BUSINESS_NAME}.
           Todos os direitos reservados.
         </p>
       </div>

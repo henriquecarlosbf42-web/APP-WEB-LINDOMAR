@@ -1,4 +1,4 @@
-# Lindomar Funilaria & Pintura — Orçamento Online
+# Oficina Classe A — Orçamento Online
 
 Site estático para receber orçamentos de **funilaria, pintura, polimento e
 pintura de rodas**. O cliente preenche um formulário multi-etapas (dados do
@@ -14,12 +14,13 @@ banco de dados.
 
 ## Como funciona
 
-O formulário (`/orcamento`) tem 4 etapas — o cliente vai clicando em
+O formulário (`/orcamento`) tem 5 etapas — o cliente vai clicando em
 "Continuar":
-1. Dados do veículo (marca, modelo, ano, cor, placa)
+1. Dados do veículo (marca, modelo, ano, cor, tipo de pintura, placa)
 2. Tipo de serviço (funilaria, pintura, polimento, pintura de rodas, etc.)
-3. Dados de contato (nome, WhatsApp, e-mail, cidade)
-4. Revisão do pedido
+3. Onde está o problema (diagrama do carro, gravidade, fotos)
+4. Dados de contato (nome, WhatsApp, e-mail, cidade, prazo)
+5. Revisão do pedido
 
 Na revisão, o cliente escolhe **Enviar pelo WhatsApp** (abre uma conversa já
 com a mensagem do orçamento pronta) ou **Enviar por e-mail** (abre o
@@ -31,7 +32,7 @@ mensagem — não existe banco de dados guardando o histórico de pedidos.
 
 ```bash
 npm install
-cp .env.example .env   # ajuste o WhatsApp e o e-mail da oficina
+cp .env.example .env   # ajuste o nome, WhatsApp e e-mail da oficina
 npm run dev
 ```
 
@@ -51,6 +52,7 @@ Para ativar (uma vez só):
    deployment" escolha **Source: GitHub Actions**.
 2. Ainda em Settings, vá em **Secrets and variables → Actions → Variables**
    e crie estas "Repository variables":
+   - `NEXT_PUBLIC_BUSINESS_NAME` — nome do negócio (ex: `Oficina Classe A`).
    - `NEXT_PUBLIC_WHATSAPP_NUMBER` — WhatsApp da oficina, só números, com
      DDI+DDD (ex: `5511999999999`).
    - `NEXT_PUBLIC_CONTACT_EMAIL` — e-mail da oficina (ex:
@@ -87,8 +89,9 @@ components/
   wizard/                   etapas do formulário multi-etapas
 lib/
   quote.ts                  schema de validação (zod) e montagem da mensagem
-  contact.ts                WhatsApp/e-mail/redes sociais da oficina (via env vars)
+  contact.ts                nome, WhatsApp/e-mail/redes sociais da oficina (via env vars)
   vehicles.ts                marcas, modelos, anos e cores dos veículos
+  protocol.ts                gera o número de protocolo do pedido
 .github/workflows/
   deploy-pages.yml           build + deploy automático no GitHub Pages
 ```
